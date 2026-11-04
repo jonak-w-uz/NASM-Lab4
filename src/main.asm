@@ -1,25 +1,33 @@
 global _start
 
 section .data
-    liczba_a dd 2.5
-    liczba_b dd 1.5
+    a dd 4.5
+    b dd 3.5
+    c dd -2.0
+    d dd 2.0
 
 section .bss
     wynik resd 1
 
+; ((a+b) * c) / d
+
 section .text
 _start:
-    finit                   ; inicjalizacja FPU
+    finit
 
-    fld dword [liczba_a]    ; wczytanie  pierwszaj liczby na stos FPU.
-    fld dword [liczba_b]    ; wczytanie  drugiej liczby na stos FPU.
+    fld dword [a]
+    fld dword [b]
+    faddp
 
-    faddp st1, st0
+    fld dword [c]
+    fmul
 
-    fstp dword [wynik]      ; zdjecie wyniku ze stosu i zapis do zmiennej wynik
+    fld dword [d]
+    fdiv
+
+    fstp dword [wynik]
 
 koniec:
-    ; Ustaw tutaj breakpoint, aby sprawdzic wynik.
     mov rax, 60
     mov rdi, 0
     syscall
